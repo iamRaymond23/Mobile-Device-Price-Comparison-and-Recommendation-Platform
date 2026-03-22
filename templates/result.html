@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title %}Prediction Result{% endblock %}
+
+{% block content %}
+<div class="result-section" style="text-align: center; margin-top: 30px;">
+    <h2 style="font-size: 2rem; margin-bottom: 20px;">Prediction Result</h2>
+    <img src="{{ url_for('static', filename='uploads/' + filename) }}" alt="Uploaded Image" style="max-width:300px; border-radius: 10px; margin-bottom: 20px;">
+    <p style="font-size: 1.5rem;">The uploaded image is predicted to be: <strong>{{ prediction }}</strong></p>
+    
+    <h3 style="font-size: 1.8rem; margin-top: 40px; margin-bottom: 20px;">Top 7 Recommended Devices ({{ prediction }})</h3>
+    <div class="device-grid">
+        {% for device in recommendations %}
+        <div class="device-item">
+            <img src="{{ url_for('static', filename='images/' + device['logo']) }}" alt="{{ device['Device name'] }}" class="device-image">
+            <p class="device-name"><strong>{{ device['Device name'] }}</strong></p>
+            <p class="device-price">Price: ${{ device['Device price'] }}</p>
+            <p class="device-score">Score: {{ device['score'] }}</p>
+            <p class="device-reviews">Reviews: {{ device['reviews'] }}</p>
+            <button class="btn btn-primary">View Details</button>
+            <button class="btn btn-secondary">Buy Now</button>
+        </div>
+        {% endfor %}
+    </div>
+
+    <a href="{{ url_for('home') }}" class="btn btn-link" style="margin-top: 30px;">Go back to Home</a>
+</div>
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ site_name }} Devices - Price Comparison Application{% endblock %}
+
+{% block content %}
+<div class="featured-section">
+    <h2 class="featured-title">{{ site_name }} Devices</h2>
+    <div class="device-grid">
+        {% for device in devices %}
+        <div class="device-item">
+            <img src="{{ url_for('static', filename='images/' + device['logo']) }}" alt="{{ device['Device name'] }}" class="device-image">
+            <p class="device-name"><strong>{{ device['Device name'] }}</strong></p>
+            <p class="device-price">Price: ${{ device['Device price'] }}</p>
+            <p class="device-score">Score: {{ device['score'] }}</p> <!-- Added Score -->
+            <p class="device-reviews">Reviews: {{ device['reviews'] }}</p>
+            <button class="btn btn-primary">View Details</button>
+            <button class="btn btn-secondary">Buy Now</button>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

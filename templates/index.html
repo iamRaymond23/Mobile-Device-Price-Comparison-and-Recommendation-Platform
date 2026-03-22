@@ -1,0 +1,157 @@
+{% extends 'base.html' %}
+
+{% block title %}Home - Price Comparison Application{% endblock %}
+
+{% block content %}
+<div class="hero-section" style="background: linear-gradient(135deg, #74ebd5 0%, #ACB6E5 100%); padding: 60px 20px; text-align: center; color: #fff;">
+    <h1 style="font-size: 3rem; font-weight: bold; margin-bottom: 20px;">Welcome to Price Comparison Hub</h1>
+    <p style="font-size: 1.5rem;">Find the best deals on your favorite devices</p>
+    <a href="{{ url_for('recommend') }}" class="btn btn-secondary" style="margin-top: 20px; font-size: 1.2rem;">Get Recommendations</a>
+</div>
+
+<div class="search-section" style="background-color: #f0f0f0; padding: 50px 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); text-align: center; margin: 40px 0;">
+    <h2 style="font-size: 2.5rem; margin-bottom: 30px; color: #333;">Upload a Device Image for Prediction</h2>
+    <form action="{{ url_for('upload_image') }}" method="post" enctype="multipart/form-data" style="display: inline-block; text-align: left;">
+        <input type="file" name="file" accept="image/*" required style="font-size: 1.2rem; padding: 10px; width: 100%; margin-bottom: 20px; border-radius: 8px; border: 1px solid #ddd;">
+        <button type="submit" class="btn btn-primary" style="width: 100%; font-size: 1.2rem; padding: 15px; border-radius: 8px;">Upload and Predict</button>
+    </form>
+</div>
+
+<div class="featured-section">
+    <h2 class="featured-title" style="font-size: 2.5rem; margin-bottom: 30px; text-align: center;">Featured Deals for the Day</h2>
+    <div class="device-grid">
+        {% for deal in deals %}
+        <div class="device-item">
+            <img src="{{ url_for('static', filename='images/' + deal['logo']) }}" alt="{{ deal['Device name'] }}" class="device-image">
+            <p class="device-name"><strong>{{ deal['Device name'] }}</strong></p>
+            <p class="device-price">Price: ${{ deal['Device price'] }}</p>
+            <p class="device-score">Score: {{ deal['score'] }}</p>
+            <p class="device-reviews">Reviews: {{ deal['reviews'] }}</p>
+            <button class="btn btn-primary">View Details</button>
+            <button class="btn btn-secondary">Buy Now</button>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="recommendation-section" style="text-align: center; margin-top: 40px;">
+    <h2 style="font-size: 2.5rem; margin-bottom: 30px;">Looking for Recommendations?</h2>
+    <a href="{{ url_for('recommend') }}" class="btn btn-primary" style="font-size: 1.5rem; padding: 15px 30px;">Get Device Recommendations</a>
+</div>
+
+<!-- Promotions Section -->
+<div class="promotions-section" style="background-color: #f8f8f8; padding: 50px 20px; text-align: center;">
+    <h2 class="section-title" style="font-size: 2.5rem; margin-bottom: 30px;">Special Promotions</h2>
+    <div class="promotion-grid" style="display: flex; justify-content: space-around;">
+        <div class="promotion-item" style="width: 30%; padding: 20px; background-color: #fff; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);">
+            <h3 style="font-size: 1.8rem;">Discounted Devices</h3>
+            <p>Up to 50% off on select devices. Limited time offer!</p>
+            <a href="#" class="btn btn-secondary">Shop Now</a>
+        </div>
+        <div class="promotion-item" style="width: 30%; padding: 20px; background-color: #fff; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);">
+            <h3 style="font-size: 1.8rem;">Bundle Offers</h3>
+            <p>Buy a device with accessories and save more!</p>
+            <a href="#" class="btn btn-secondary">Explore Bundles</a>
+        </div>
+        <div class="promotion-item" style="width: 30%; padding: 20px; background-color: #fff; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);">
+            <h3 style="font-size: 1.8rem;">Free Shipping</h3>
+            <p>Get free shipping on all orders over $500.</p>
+            <a href="#" class="btn btn-secondary">Learn More</a>
+        </div>
+    </div>
+</div>
+
+<!-- Chatbot Section -->
+<div class="chatbot-container">
+    <button id="chatbot-open" class="chatbot-button">💬 Chat with us!</button>
+    <div id="chatbot" class="chatbot">
+        <div class="chatbot-header">
+            <h4>Price Comparison Assistant</h4>
+            <button id="chatbot-close" class="chatbot-close">&times;</button>
+        </div>
+        <div class="chatbot-messages">
+            <!-- Chat messages will appear here -->
+        </div>
+        <div class="chatbot-input">
+            <input type="text" id="chatbot-input-field" placeholder="Type your message..." />
+            <button id="chatbot-send" class="btn btn-primary">Send</button>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+<!-- Include this at the end of your page -->
+<script>
+    document.getElementById('chatbot-open').addEventListener('click', function() {
+        document.getElementById('chatbot').style.display = 'flex';
+        this.style.display = 'none';
+    });
+
+    document.getElementById('chatbot-close').addEventListener('click', function() {
+        document.getElementById('chatbot').style.display = 'none';
+        document.getElementById('chatbot-open').style.display = 'block';
+    });
+
+    document.getElementById('chatbot-send').addEventListener('click', function() {
+        const inputField = document.getElementById('chatbot-input-field');
+        const userMessage = inputField.value;
+        if (userMessage.trim()) {
+            const messageContainer = document.createElement('div');
+            messageContainer.classList.add('chatbot-message', 'user-message');
+            messageContainer.textContent = userMessage;
+            document.querySelector('.chatbot-messages').appendChild(messageContainer);
+            inputField.value = '';
+
+            // Simulate a bot response after a delay
+            setTimeout(function() {
+                const botMessageContainer = document.createElement('div');
+                botMessageContainer.classList.add('chatbot-message', 'bot-message');
+                botMessageContainer.textContent = "This is a simulated response. The actual bot integration would provide real answers.";
+                document.querySelector('.chatbot-messages').appendChild(botMessageContainer);
+            }, 1000);
+        }
+    });
+</script>
+
+<style>
+    /* Chatbot styles */
+    .chatbot-container {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        z-index: 1000;
+    }
+
+    .chatbot-button {
+        background-color: #4CAF50;
+        color: #fff;
+        padding: 15px 20px;
+        border: none;
+        border-radius: 50px;
+        cursor: pointer;
+        font-size: 1.2rem;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        transition: background-color 0.3s ease, transform 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .chatbot-button:hover {
+        background-color: #45a049;
+        transform: translateY(-2px);
+    }
+
+    .chatbot {
+        display: none;
+        flex-direction: column;
+        justify-content: space-between;
+        width: 350px;
+        height: 500px;
+        background-color: #fff;
+        border-radius: 15px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+        position: fixed;
+        bottom: 80px;
+        right: 20

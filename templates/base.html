@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Price Comparison Application{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header>
+        <nav class="top-nav">
+            <div class="nav-left">
+                <ul>
+                    <li class="dropdown">
+                        <a href="#" class="dropbtn">Brands</a>
+                        <div class="dropdown-content">
+                            <!-- Update these links to correctly reference the brand routes -->
+                            <a href="{{ url_for('show_brand_devices', brand_name='Apple') }}">Apple</a>
+                            <a href="{{ url_for('show_brand_devices', brand_name='Samsung') }}">Samsung</a>
+                            <a href="{{ url_for('show_brand_devices', brand_name='Google') }}">Google</a>
+                            <a href="{{ url_for('show_brand_devices', brand_name='Motorola') }}">Motorola</a>
+                        </div>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropbtn">Sites</a>
+                        <div class="dropdown-content">
+                            <a href="{{ url_for('show_site_devices', site_name='Amazon') }}">Amazon</a>
+                            <a href="{{ url_for('show_site_devices', site_name='Bestbuy') }}">Best Buy</a>
+                            <a href="{{ url_for('show_site_devices', site_name='Walmart') }}">Walmart</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="nav-center">
+                <a href="{{ url_for('home') }}" class="plain-text-link">Price Comparison Application</a>
+            </div>
+            <div class="nav-right">
+                <a href="#" class="plain-text-link">Login</a>
+                <a href="#" class="plain-text-link spaced-link">Sign Up</a>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Price Comparison Application. All rights reserved.</p>
+    </footer>
+</body>
+</html>

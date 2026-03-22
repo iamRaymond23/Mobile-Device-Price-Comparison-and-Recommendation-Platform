@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+
+{% block title %}Device Recommendations{% endblock %}
+
+{% block content %}
+<div class="recommendation-section" style="text-align: center; margin-top: 30px; background-color: #f0f0f5; padding: 50px 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);">
+    <h2 style="font-size: 2.5rem; margin-bottom: 30px; color: #333;">Get Device Recommendations</h2>
+    <form action="{{ url_for('recommend') }}" method="POST" style="margin-bottom: 40px;">
+        <label for="recommendation_type" style="font-size: 1.5rem; color: #555;">Choose a Recommendation Type:</label>
+        <select name="recommendation_type" id="recommendation_type" style="font-size: 1.2rem; padding: 10px; margin: 20px; border-radius: 5px; border: 1px solid #ddd;">
+            <option value="manufacturer">Based on Manufacturer</option>
+            <option value="platform">Based on Platform</option>
+            <option value="price">Based on Price</option>
+            <option value="reviews">Based on Reviews</option>
+        </select>
+
+        <!-- Manufacturer dropdown, initially hidden -->
+        <div id="manufacturer_field" class="optional-field" style="display: none; margin-top: 20px;">
+            <label for="manufacturer" style="font-size: 1.2rem; color: #555;">Select Manufacturer:</label>
+            <select name="manufacturer" id="manufacturer" style="font-size: 1.2rem; padding: 10px; border-radius: 5px; border: 1px solid #ddd;">
+                <option value="Apple">Apple</option>
+                <option value="Samsung">Samsung</option>
+                <option value="Google">Google</option>
+                <option value="Motorola">Motorola</option>
+            </select>
+        </div>
+
+        <!-- Platform dropdown, initially hidden -->
+        <div id="platform_field" class="optional-field" style="display: none; margin-top: 20px;">
+            <label for="platform" style="font-size: 1.2rem; color: #555;">Select Platform:</label>
+            <select name="platform" id="platform" style="font-size: 1.2rem; padding: 10px; border-radius: 5px; border: 1px solid #ddd;">
+                <option value="Amazon">Amazon</option>
+                <option value="Bestbuy">Best Buy</option>
+                <option value="Walmart">Walmart</option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="margin-top: 30px; padding: 12px 25px; font-size: 1.2rem; border-radius: 5px;">Get Recommendations</button>
+    </form>
+
+    {% if recommendations %}
+    <h3 style="font-size: 2rem; margin-bottom: 30px; color: #333;">Top Recommended Devices</h3>
+    <div class="device-grid">
+        {% for device in recommendations %}
+        <div class="device-item" style="background-color: #fff; border-radius: 8px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); padding: 20px; margin-bottom: 30px;">
+            <img src="{{ url_for('static', filename='images/' + device['logo']) }}" alt="{{ device['Device name'] }}" class="device-image" style="margin-bottom: 15px;">
+            <p class="device-name" style="font-size: 1.5rem; color: #333;"><strong>{{ device['Device name'] }}</strong></p>
+            <p class="device-price" style="font-size: 1.3rem; color: #27ae60;">Price: ${{ device['Device price'] }}</p>
+            <p class="device-score" style="font-size: 1.1rem; color: #555;">Score: {{ device['score'] }}</p>
+            <p class="device-reviews" style="font-size: 1.1rem; color: #888;">Reviews: {{ device['reviews'] }}</p>
+            <button class="btn btn-primary" style="margin-top: 10px; width: 100%;">View Details</button>
+            <button class="btn btn-secondary" style="margin-top: 10px; width: 100%;">Buy Now</button>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p style="color: #888; font-size: 1.2rem;">No recommendations found for the selected criteria.</p>
+    {% endif %}
+</div>
+
+<!-- Promotions Section -->
+<div class="promotions-section" style="background-color: #f8f8f8; padding: 50px 20px; text-align: center; margin-top: 50px;">
+    <h2 class="section-title" style="font-size: 2rem; margin-bottom: 30px; color: #333;">Special Offers Just for You</h2>
+    <div class="promotion-grid" style="display: flex; justify-content: space-around;">
+        <div class="promotion-item" style="width: 30%; padding: 20px; background-color: #fff; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); border-radius: 8px;">
+            <h3 style="font-size: 1.5rem; color: #333;">Exclusive Discounts</h3>
+            <p style="color: #555;">Save up to 30% on top-rated devices. Limited time only!</p>
+            <a href="#" class="btn btn-secondary">Shop Now</a>
+        </div>
+        <div class="promotion-item" style="width: 30%; padding: 20px; background-color: #fff; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); border-radius: 8px;">
+            <h3 style="font-size: 1.5rem; color: #333;">Holiday Bundles</h3>
+            <p style="color: #555;">Get more for less with our special holiday bundles!</p>
+            <a href="#" class="btn btn-secondary">Explore Bundles</a>
+        </div>
+        <div class="promotion-item" style="width: 30%; padding: 20px; background-color: #fff; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); border-radius: 8px;">
+            <h3 style="font-size: 1.5rem; color: #333;">Free Accessories</h3>
+            <p style="color: #555;">Buy a device and get free accessories worth $100.</p>
+            <a href="#" class="btn btn-secondary">Learn More</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('recommendation_type').addEventListener('change', function() {
+        var value = this.value;
+        document.getElementById('manufacturer_field').style.display = (value === 'manufacturer') ? 'block' : 'none';
+        document.getElementById('platform_field').style.display = (value === 'platform') ? 'block' : 'none';
+    });
+
+    window.onload = function() {
+        var value = document.getElementById('recommendation_type').value;
+        document.getElementById('manufacturer_field').style.display = (value === 'manufacturer') ? 'block' : 'none';
+        document.getElementById('platform_field').style.display = (value === 'platform') ? 'block' : 'none';
+    };
+</script>
+
+{% endblock %}
